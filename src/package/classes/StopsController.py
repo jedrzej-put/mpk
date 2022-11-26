@@ -5,10 +5,11 @@ from ...dependencies import get_db
 from sqlalchemy.orm import Session
 from decimal import *
 from math import sin, cos, sqrt, atan2, radians
+from typing import List, Dict
 
 class StopsController():
     def __init__(self):
-        self.all_stops = crud.get_stops(db=next(get_db()))
+        self.all_stops:List[Dict] = crud.get_stops(db=next(get_db()))
     
     @staticmethod
     def calc_distance(lat1: str, lon1: str, lat2: str, lon2: str) -> float:
@@ -21,3 +22,12 @@ class StopsController():
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
         return _R * c
+    
+    def nearest_stops_to_up(self, lat:str, lon:str, count:int = 5, stops:List[Dict] = None) -> List[Dict]:
+        _stops = self.all_stops if stops is None else stops
+        
+        # key(stop_id): value(distance between stop_id and point(lat, lon))
+        distances = {stop.get('stop_id'):self.calc_distance(lat, lon, stop.get('stop_lat'), stop.get('stop_lon') ) for stop in _stops}
+        
+        ordered_stops = sorted(_stops, key=lambda stop: distances.get(stop.get('stop_id'))) 
+        return ordered_stops[:count]
