@@ -66,9 +66,7 @@ class StopsController:
         stops_within_radio = [stop for stop in ordered_stops if distances.get(stop.get("stop_id")) < _radio]
         return stops_within_radio[:count]
 
-    
-
-    def stops_compose(self, x):
+    def test_compose(self, x):
         def add_2(x):
             return x + 2
         def multiply_2(x):

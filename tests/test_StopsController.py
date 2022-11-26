@@ -46,6 +46,6 @@ def stops_controller():
 #     assert StopsController.get_radio_according_age(75) == 100
 
 
-def test_stops_compose(stops_controller):
-    LOGGER.info(stops_controller.stops_compose(4))
-    assert stops_controller.stops_compose(4) == 10
+def test_test_compose(stops_controller):
+    LOGGER.info(stops_controller.test_compose(4))
+    assert stops_controller.test_compose(4) == 10
