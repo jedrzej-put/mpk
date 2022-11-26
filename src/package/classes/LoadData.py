@@ -37,10 +37,10 @@ class LoadData():
     
     def __call__(self) -> None:
         self.load_data_from_file('./assets/cities.csv', City)
-        # self.load_data_from_file('./assets/routes-wroclaw.csv', Route)
+        self.load_data_from_file('./assets/routes-wroclaw.csv', Route)
         self.load_data_from_file('./assets/stop_times.csv', StopTime)
-        # self.load_data_from_file('./assets/stops.csv', Stop)
-        # self.load_data_from_file('./assets/trips.csv', Trip)
-        # self.load_data_from_file('./assets/calendar.csv', Calendar)
+        self.load_data_from_file('./assets/stops.csv', Stop)
+        self.load_data_from_file('./assets/trips.csv', Trip)
+        self.load_data_from_file('./assets/calendar.csv', Calendar)
 
             
