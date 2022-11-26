@@ -31,8 +31,8 @@ class Stop(Model):
     stop_id = Column(String, primary_key=True, index=True)
     stop_code = Column(String)
     stop_name = Column(String)
-    stop_lat = Column(Numeric)
-    stop_lon = Column(Numeric)
+    stop_lat = Column(String)
+    stop_lon = Column(String)
 
 class StopTime(Model):
     __tablename__ = "stop_times"

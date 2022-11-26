@@ -20,8 +20,8 @@ class Stop(BaseModel):
     stop_id: str
     stop_code: str
     stop_name: str
-    stop_lat: float
-    stop_lon: float
+    stop_lat: str
+    stop_lon: str
 
 class StopTime(BaseModel):
     auto_increment_id: int
