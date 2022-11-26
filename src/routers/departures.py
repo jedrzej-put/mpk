@@ -19,9 +19,6 @@ def read_stops(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 
 @router.get("/stops/nearest", response_model=list[schemas.Stop])
-# def read_cities(lat: str = "0.0", lon: str = "0.0", count: int = 5):
-#     stops = stops_controller.nearest_stops_to_up(lat, lon, count)
-#     return stops
 def read_cities(req: StopRequest):
-    stops = stops_controller.nearest_stops_to_up(req.lat, req.lon, req.count)
+    stops = stops_controller.nearest_stops_to_up(req.lat, req.lon, req.age, req.count)
     return stops

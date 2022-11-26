@@ -5,4 +5,9 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 
 uvicorn src.main:app --reload
-dsd
+
+{
+"lat": "51.13382609",
+"lon": "16.95673511",
+"count": 2
+}

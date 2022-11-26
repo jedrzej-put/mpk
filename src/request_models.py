@@ -5,3 +5,4 @@ class StopRequest(BaseModel):
     lat: str
     lon: str
     count: int 
+    age: int

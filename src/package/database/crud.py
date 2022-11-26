@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from datetime import timedelta
 from . import models, schemas
 
 
@@ -14,3 +14,6 @@ def get_trips(db: Session, skip: int = 0, limit: int = 1000000):
 
 def get_stops(db: Session, skip: int = 0, limit: int = 1000000):
     return [_.toDict() for _ in db.query(models.Stop).offset(skip).limit(limit).all()] 
+
+def get_stop_times_by_stop_id(db: Session, stop_id: str):
+    return [_.toDict() for _ in db.query(models.StopTime).filter(models.StopTime.stop_id == stop_id).all()]

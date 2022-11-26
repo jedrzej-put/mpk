@@ -26,8 +26,8 @@ class Stop(BaseModel):
 class StopTime(BaseModel):
     auto_increment_id: int
     trip_id: str
-    arrival_time: timedelta
-    departure_time: timedelta
+    arrival_time: str
+    departure_time: str
     stop_id: str
     stop_code: str
     stop_sequence: int

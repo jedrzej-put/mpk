@@ -20,7 +20,7 @@ app = FastAPI()
 app.include_router(city_route.router)
 app.include_router(departures.router)
 
+
 @app.get("/")
 async def root(db: Session = Depends(get_db)):
     return {"message": "Hello World"}
-

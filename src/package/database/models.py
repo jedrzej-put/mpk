@@ -38,8 +38,8 @@ class StopTime(Model):
     __tablename__ = "stop_times"
     auto_increment_id = Column(Integer, index=True, primary_key=True, autoincrement=True)
     trip_id = Column(String)
-    arrival_time = Column(Interval)
-    departure_time = Column(Interval)
+    arrival_time = Column(String)
+    departure_time = Column(String)
     stop_id = Column(String)
     stop_sequence = Column(Integer)
     
