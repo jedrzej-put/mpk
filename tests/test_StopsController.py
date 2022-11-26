@@ -20,4 +20,4 @@ def test_calc_distance():
     lat2 = "52.406374"
     lon2 = "16.9251681"
     distance = StopsController.calc_distance(lat1, lon1, lat2, lon2)
-    assert pytest.approx(278.546, rel=1e-3) == distance
+    assert pytest.approx(278546, rel=10, abs=10) == distance

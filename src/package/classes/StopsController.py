@@ -12,7 +12,7 @@ class StopsController():
     
     @staticmethod
     def calc_distance(lat1: str, lon1: str, lat2: str, lon2: str) -> float:
-        _R = 6373.0
+        _R = 6373.0 * 10e3
         _lat1, _lat2, _lon1, _lon2 = radians(Decimal(lat1)), radians(Decimal(lat2)), radians(Decimal(lon1)), radians(Decimal(lon2))
         _d_lon = _lon2 - _lon1
         _d_lat = _lat2 - _lat1
