@@ -1,18 +1,7 @@
 from sqlalchemy import Column, Integer, String, Numeric, Enum, Date, Time
 from typing import Dict, List
 from sqlalchemy.ext.declarative import declarative_base
-from .database import Base
-
-class NormalModel():
-    def toDict(self) -> Dict:
-        return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
-    
-    @classmethod
-    def keys_names(cls) -> List:
-        return [str(c.name) for c in cls.__table__.columns]
-
-           
-Model = declarative_base(cls=NormalModel)
+from .Model import Model
 
 class City(Model):
     __tablename__ = "cities"
@@ -47,7 +36,7 @@ class Stop(Model):
 
 class StopTime(Model):
     __tablename__ = "stop_times"
-
+    auto_increment_id = Column(Integer, index=True, primary_key=True, autoincrement=True)
     trip_id = Column(String)
     arrival_time = Column(Time)
     departure_time = Column(Time)

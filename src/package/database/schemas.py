@@ -24,6 +24,7 @@ class Stop(BaseModel):
     stop_lon: float
 
 class StopTime(BaseModel):
+    auto_increment_id: int
     trip_id: str
     arrival_time: time
     departure_time: time

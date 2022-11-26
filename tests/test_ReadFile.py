@@ -1,14 +1,14 @@
-from src.package.classes.ReadFile import ReadFile
+from src.package.database.models  import StopTime
+from src.package.database.Model import Model
+
 import pytest, logging
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger()
 
-@pytest.fixture
-def file_name():
-    return './assets/cities.csv'
-
-def test_read_cities(file_name):
-    read_file = ReadFile(file_name)
-
-    assert ['1', 'Wroclaw'] == next(read_file.get_data_row())
+def test_StopTime():
+    pass
+#    LOGGER.info(list(StopTime.keys_names()))
     
+
+def test_MetaData():
+    LOGGER.info(Model.metadata.tables)
