@@ -3,11 +3,14 @@ from sqlalchemy.orm import Session
 
 from ..package.database import crud, models, schemas
 from ..dependencies import get_db
-
+from ..request_models import StopRequest
+from ..package.classes.StopsController import StopsController
 
 router = APIRouter(
     tags=["departures"],
 )
+
+stops_controller = StopsController()
 
 @router.get("/stops/", response_model=list[schemas.Stop])
 def read_stops(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -15,8 +18,10 @@ def read_stops(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return stops
 
 
-@router.get("/departures/", response_model=list[schemas.City])
-def read_cities(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    cities = crud.get_cities(db, skip=skip, limit=limit)
-    return cities
-
+@router.get("/stops/nearest", response_model=list[schemas.Stop])
+# def read_cities(lat: str = "0.0", lon: str = "0.0", count: int = 5):
+#     stops = stops_controller.nearest_stops_to_up(lat, lon, count)
+#     return stops
+def read_cities(req: StopRequest):
+    stops = stops_controller.nearest_stops_to_up(req.lat, req.lon, req.count)
+    return stops
