@@ -7,8 +7,7 @@ class NormalModel():
     
     @classmethod
     def keys_names(cls) -> List:
-        # return [str(c.name) for c in cls.__table__.columns if c.name != 'auto_increment_id']
-        return [str(c.name) for c in cls.__table__.columns]
+        return [str(c.name) for c in cls.__table__.columns if c.name != 'auto_increment_id']
 
            
 Model = declarative_base(cls=NormalModel)

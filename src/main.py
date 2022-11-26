@@ -9,11 +9,11 @@ from .dependencies import get_db
 from .routers import city_route
 from .package.database.Model import Model
 
-# Model.metadata.drop_all(bind=engine)
-# Model.metadata.create_all(bind=engine)
+Model.metadata.drop_all(bind=engine)
+Model.metadata.create_all(bind=engine)
 
-# load_all_files = LoadData()
-# load_all_files()
+load_all_files = LoadData()
+load_all_files()
 
 app = FastAPI()
 
