@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import date, time
+from datetime import timedelta, date
 from enum import IntEnum
 class City(BaseModel):
     city_id: int
@@ -26,8 +26,8 @@ class Stop(BaseModel):
 class StopTime(BaseModel):
     auto_increment_id: int
     trip_id: str
-    arrival_time: time
-    departure_time: time
+    arrival_time: timedelta
+    departure_time: timedelta
     stop_id: str
     stop_code: str
     stop_sequence: int
