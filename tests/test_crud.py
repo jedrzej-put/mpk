@@ -61,3 +61,27 @@ def test_get_stop_by_auto_increment_id(get_session):
         "stop_id": "4562",
         "stop_sequence": "32",
     }
+
+
+def test_get_calendar_by_stop_time(get_session):
+    stop_time = {
+        "auto_increment_id": "46818",
+        "trip_id": "3_11554675",
+        "arrival_time": "22:25:00",
+        "departure_time": "22:25:00",
+        "stop_id": "4562",
+        "stop_sequence": "0",
+    }
+    result = crud.get_calendar_by_stop_time(get_session, stop_time)
+    assert result == {
+        "service_id": "3",
+        "monday": "0",
+        "tuesday": "0",
+        "wednesday": "0",
+        "thursday": "0",
+        "friday": "0",
+        "saturday": "1",
+        "sunday": "0",
+        "start_date": "2022-11-27",
+        "end_date": "2022-12-11",
+    }

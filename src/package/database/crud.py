@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from . import models, schemas
+from typing import Dict
 
 
 def get_routes(db: Session, skip: int = 0, limit: int = 1000000):
@@ -48,3 +49,7 @@ def get_calendar_by_service_id(db: Session, service_id):
 
 def get_stop_by_auto_increment_id(db: Session, auto_increment_id):
     return db.query(models.StopTime).filter(models.StopTime.auto_increment_id == auto_increment_id).first().toDict()
+
+def get_calendar_by_stop_time(db: Session, stop_time: Dict):
+    trip = get_trip_by_trip_id(db, stop_time.get("trip_id"))
+    return get_calendar_by_service_id(db, trip.get("service_id"))

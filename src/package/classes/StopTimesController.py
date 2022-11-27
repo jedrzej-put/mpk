@@ -47,12 +47,11 @@ class StopTimesController:
             lat, lon, age, count=count_stop, stops=_stops
         )
         self.count_departure_on_stop = count_departure_on_stop
-        LOGGER.info(f"CURRENT TIME: {self.start_time_deltatime}")
+        LOGGER.info(f"CURRENT TIME: {self.start_datetime}")
 
     def nearest_departures_run(self) -> List[Dict]:
         pass
 
-    
     ## methods for processing single stop
     @staticmethod
     def time_to_timedelta(_time: str) -> timedelta:
@@ -101,5 +100,51 @@ class StopTimesController:
             x["time_left"] = time_left_until_departure.get(x.get("auto_increment_id"))
         return departures_after_start_timedelta_before_midnight
 
-    def nearest_departures(self) -> List[Dict]:
-        pass
+    def correct_weekday_based_one_time(
+        self, current_weekday, departure_time: str
+    ) -> int:
+        """correct weekday based one time"""
+        if self.start_time_deltatime < self.time_to_timedelta(departure_time):
+            return current_weekday
+        else:
+            return current_weekday + 1
+
+    def verify_service(
+        self, current_weekday: int, stop_time: Dict, calendar: Dict
+    ) -> bool:
+        if (
+            self.start_datetime.date()
+            < datetime.strptime(calendar.get("start_date"), "%Y-%m-%d").date()
+        ):
+            return False
+        elif (
+            self.start_datetime.date()
+            > datetime.strptime(calendar.get("end_date"), "%Y-%m-%d").date()
+        ):
+            return False
+        else:
+            num_day_to_day_name = {
+                0: "monday",
+                1: "yuesday",
+                2: "wednesday",
+                3: "thursday",
+                4: "friday",
+                5: "saturday",
+                6: "sunday"
+            }
+            current_day_name = num_day_to_day_name.get(current_weekday)
+            if calendar.get(current_day_name) == '1':
+                return True
+            else: 
+                return False
+
+    def verify_calendar_current_time(self, stop_time: Dict) -> Dict | None:
+        current_weekday = self.correct_weekday_based_one_time(
+            self.start_datetime.weekday(), stop_time.get("departure_time")
+        )
+        calendar = crud.get_calendar_by_stop_time(
+            db=next(get_db()), stop_time=stop_time
+        )
+        LOGGER.info(calendar)
+        result = stop_time if self.verify_service(current_weekday, stop_time, calendar) else None
+        return result
