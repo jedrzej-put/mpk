@@ -46,3 +46,18 @@ def test_get_calendar_by_service_id(get_session):
         "start_date": "2022-11-27",
         "end_date": "2022-12-11",
     }
+
+
+def test_get_stop_by_auto_increment_id(get_session):
+    result = crud.get_stop_by_auto_increment_id(
+        db=get_session, auto_increment_id="735431"
+    )
+    LOGGER.info(result)
+    assert result == {
+        "auto_increment_id": "735431",
+        "trip_id": "3_11553791",
+        "arrival_time": "22:24:00",
+        "departure_time": "22:24:00",
+        "stop_id": "4562",
+        "stop_sequence": "32",
+    }

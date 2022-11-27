@@ -45,3 +45,6 @@ def get_calendar_by_service_id(db: Session, service_id):
         .first()
         .toDict()
     )
+
+def get_stop_by_auto_increment_id(db: Session, auto_increment_id):
+    return db.query(models.StopTime).filter(models.StopTime.auto_increment_id == auto_increment_id).first().toDict()
