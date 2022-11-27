@@ -32,3 +32,16 @@ def get_stop_times_by_stop_id(db: Session, stop_id: str):
         .filter(models.StopTime.stop_id == stop_id)
         .all()
     ]
+
+
+def get_trip_by_trip_id(db: Session, trip_id):
+    return db.query(models.Trip).filter(models.Trip.trip_id == trip_id).first().toDict()
+
+
+def get_calendar_by_service_id(db: Session, service_id):
+    return (
+        db.query(models.Calendar)
+        .filter(models.Calendar.service_id == service_id)
+        .first()
+        .toDict()
+    )

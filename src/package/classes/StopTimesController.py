@@ -29,8 +29,8 @@ class StopTimesController:
         self.lat = lat
         self.lon = lon
         self.age = age
-        self.all_trips: List[Dict] = crud.get_trips(db=next(get_db()))
-        self.all_calendars: List[Dict] = crud.get_calendars(db=next(get_db()))
+        # self.all_trips: List[Dict] = crud.get_trips(db=next(get_db()))
+        # self.all_calendars: List[Dict] = crud.get_calendars(db=next(get_db()))
         self.all_stops: List[Dict] = crud.get_stops(db=next(get_db()))
         self.start_datetime = (
             datetime.now()
@@ -52,6 +52,7 @@ class StopTimesController:
     def nearest_departures_run(self) -> List[Dict]:
         pass
 
+    
     ## methods for processing single stop
     @staticmethod
     def time_to_timedelta(_time: str) -> timedelta:
@@ -99,3 +100,6 @@ class StopTimesController:
         for x in departures_after_start_timedelta_before_midnight:
             x["time_left"] = time_left_until_departure.get(x.get("auto_increment_id"))
         return departures_after_start_timedelta_before_midnight
+
+    def nearest_departures(self) -> List[Dict]:
+        pass
