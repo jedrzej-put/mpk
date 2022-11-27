@@ -28,6 +28,7 @@ class StopTimesController:
     ):
         self.all_trips: List[Dict] = crud.get_trips(db=next(get_db()))
         self.all_calendars: List[Dict] = crud.get_calendars(db=next(get_db()))
+        self.all_stops: List[Dict] = crud.get_stops(db=next(get_db()))
         self.start_datetime = (
             datetime.now()
             if current_time is None
@@ -60,15 +61,12 @@ class StopTimesController:
         )
 
         # """filter to departure_time will be greater than current time"""
-        departures_after_start_timedelta = [
+        departures_after_start_timedelta_before_midnight = [
             _
             for _ in all_departures
             if self.time_to_timedelta(_.get("departure_time"))
-            > self.start_time_deltatime
+            >= self.start_time_deltatime
         ]
-        _flag = False
-        if len(departures_after_start_timedelta) == 0:
-            pass
 
         # """sort departures by time left until departure"""
         time_left_until_departure = {
@@ -76,9 +74,23 @@ class StopTimesController:
                 self.time_to_timedelta(_.get("departure_time"))
                 - self.start_time_deltatime
             )
-            for _ in departures_after_start_timedelta
+            for _ in all_departures
         }
-        departures_after_start_timedelta.sort(
+        departures_after_start_timedelta_before_midnight.sort(
             key=lambda x: time_left_until_departure.get(x.get("auto_increment_id"))
         )
-        return departures_after_start_timedelta
+        complementary_departures = []
+        if (
+            len(departures_after_start_timedelta_before_midnight)
+            < self.count_departure_on_stop
+        ):
+            complementary_departures = sorted(
+                all_departures,
+                key=lambda x: time_left_until_departure.get(x.get("auto_increment_id")),
+                reverse=True,
+            )
+
+        departures_after_start_timedelta_before_midnight.extend(
+            complementary_departures
+        )
+        return departures_after_start_timedelta_before_midnight

@@ -8,7 +8,7 @@ LOGGER = logging.getLogger()
 
 @pytest.fixture
 def stop_times_controller():
-    return StopTimesController(current_time="2021-11-04T20:51:00")
+    return StopTimesController("51.13382609", "16.95673511", 20, current_time="2021-11-04T22:24:00")
 
 
 def test_time_to_timedelta(stop_times_controller):
@@ -24,4 +24,4 @@ def test_time_to_timedelta(stop_times_controller):
 def test_get_ordered_departures_of_stop(stop_times_controller):
     result = stop_times_controller.get_ordered_departures_of_stop(stop_id="4562")
     LOGGER.info(result[0])
-    assert None
+    assert result[0].get("stop_id") == "4562"

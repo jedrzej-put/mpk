@@ -21,4 +21,3 @@ def test_MetaData():
 def test_regex():
     LOGGER.info(LoadData.convert_date_time("start_date", "20221127"))
     assert LoadData.convert_date_time("start_date", "20221127") == datetime.date(2022, 11, 27)
-    assert LoadData.convert_date_time("arrival_time", "26:52:00") == datetime.timedelta(26, 52, 0)
