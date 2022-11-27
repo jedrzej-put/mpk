@@ -130,15 +130,15 @@ class StopTimesController:
                 3: "thursday",
                 4: "friday",
                 5: "saturday",
-                6: "sunday"
+                6: "sunday",
             }
             current_day_name = num_day_to_day_name.get(current_weekday)
-            if calendar.get(current_day_name) == '1':
+            if calendar.get(current_day_name) == "1":
                 return True
-            else: 
+            else:
                 return False
 
-    def verify_calendar_current_time(self, stop_time: Dict) -> Dict | None:
+    def verify_calendar_current_time(self, stop: Dict, stop_time: Dict) -> Dict | None:
         current_weekday = self.correct_weekday_based_one_time(
             self.start_datetime.weekday(), stop_time.get("departure_time")
         )
@@ -146,5 +146,18 @@ class StopTimesController:
             db=next(get_db()), stop_time=stop_time
         )
         LOGGER.info(calendar)
-        result = stop_time if self.verify_service(current_weekday, stop_time, calendar) else None
+        result = (
+            stop_time
+            if self.verify_service(current_weekday, stop_time, calendar)
+            else None
+        )
         return result
+
+    def verify_direction(self, stop: Dict, stop_time: Dict) -> Dict | None:
+        current_distance = StopsController.calc_distance(
+            lat1=stop.get("stop_lat"),
+            lon1=stop.get("stop_lon"),
+            lat2=self.lat,
+            lon2=self.lon,
+        )
+        return current_distance

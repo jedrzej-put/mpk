@@ -13,8 +13,8 @@ class StopsController:
     def __init__(self):
         self.all_stops: List[Dict] = crud.get_stops(db=next(get_db()))
 
-    @staticmethod
-    def calc_distance(lat1: str, lon1: str, lat2: str, lon2: str) -> float:
+    @classmethod
+    def calc_distance(cls, lat1: str, lon1: str, lat2: str, lon2: str) -> float:
         _R = 6373.0 * 10e3
         _lat1, _lat2, _lon1, _lon2 = (
             radians(Decimal(lat1)),
