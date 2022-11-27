@@ -6,6 +6,7 @@ from .package.database.database import engine
 from .package.classes.LoadData import LoadData
 from .package.database import crud, models, schemas
 from .dependencies import get_db
+
 from .routers import city_route, departures
 from .package.database.Model import Model
 
