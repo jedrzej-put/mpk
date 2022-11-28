@@ -22,20 +22,35 @@ def stop_metalowcow():
 @pytest.fixture
 def stop_times_controller_thursday():
     return StopTimesController(
-        "51.13382609", "16.96673511", 20, current_time="2021-11-04T22:24:00"
+        "51.13382609",
+        "16.96673511",
+        20,
+        "51.14062655",
+        "16.95825689",
+        current_time="2021-11-04T22:24:00",
     )
 
 
 @pytest.fixture
 def stop_times_controller_saturday():
     return StopTimesController(
-        "51.13382609", "16.96673511", 20, current_time="2022-12-03T22:24:00"
+        "51.13382609",
+        "16.96673511",
+        20,
+        "51.14062655",
+        "16.95825689",
+        current_time="2022-12-03T22:24:00",
     )
 
 
 def get_stop_time_by_autoincrement_id(stop_time_id):
     stop_times_controller = StopTimesController(
-        "51.13382609", "16.95673511", 20, current_time="2021-11-04T22:24:00"
+        "51.13382609",
+        "16.95673511",
+        20,
+        "51.14062655",
+        "16.95825689",
+        current_time="2021-11-04T22:24:00",
     )
     stop_time = crud.get_stop_by_auto_increment_id(
         db=next(get_db()), auto_increment_id=stop_time_id
@@ -87,9 +102,39 @@ def get_stop_time_by_autoincrement_id(stop_time_id):
 #     assert result == stop_time
 
 
-def test_verify_direction(stop_times_controller_saturday, stop_metalowcow):
+def test_get_distance_target_location_stop_time(stop_times_controller_saturday):
     stop_time = get_stop_time_by_autoincrement_id("591856")  # only saturday serviced
-    result = stop_times_controller_saturday.verify_direction(
-        stop=stop_metalowcow, stop_time=stop_time
+    result = stop_times_controller_saturday.get_distance_target_location_stop_time(
+        stop_time=stop_time
     )
     LOGGER.info(f"result: {result}")
+    assert pytest.approx(6979, rel=10, abs=10) == result
+
+
+def test_get_next_stop_time(stop_times_controller_saturday):
+    stop_time = get_stop_time_by_autoincrement_id("591856")  # only saturday serviced
+    next_stop_time = stop_times_controller_saturday.get_next_stop_time(stop_time)
+    LOGGER.info(f"next_stop_time: {next_stop_time}")
+    assert next_stop_time == {
+        "auto_increment_id": "591857",
+        "trip_id": "3_11455579",
+        "arrival_time": "21:12:00",
+        "departure_time": "21:12:00",
+        "stop_id": "1809",
+        "stop_sequence": "2",
+    }
+
+
+def test_verify_direction(stop_times_controller_saturday, stop_metalowcow):
+    stop_time = get_stop_time_by_autoincrement_id("591856")  # only saturday serviced
+    result = stop_times_controller_saturday.verify_direction(stop_time=stop_time)
+    LOGGER.info(f"result: {result}")
+    assert result == {
+        "auto_increment_id": "591856",
+        "trip_id": "3_11455579",
+        "arrival_time": "21:11:00",
+        "departure_time": "21:11:00",
+        "stop_id": "15",
+        "stop_sequence": "1",
+        "time_left": datetime.timedelta(days=-1, seconds=82020),
+    }

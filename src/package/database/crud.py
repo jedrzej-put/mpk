@@ -35,6 +35,17 @@ def get_stop_times_by_stop_id(db: Session, stop_id: str):
     ]
 
 
+def get_stop_times_by_trip_id(db: Session, trip_id: str):
+    return [
+        _.toDict()
+        for _ in db.query(models.StopTime)
+        .filter(models.StopTime.trip_id == trip_id)
+        .all()
+    ]
+
+def get_stop_by_stop_id(db: Session, stop_id):
+    return db.query(models.Stop).filter(models.Stop.stop_id == stop_id).first().toDict()
+
 def get_trip_by_trip_id(db: Session, trip_id):
     return db.query(models.Trip).filter(models.Trip.trip_id == trip_id).first().toDict()
 
@@ -47,8 +58,15 @@ def get_calendar_by_service_id(db: Session, service_id):
         .toDict()
     )
 
+
 def get_stop_by_auto_increment_id(db: Session, auto_increment_id):
-    return db.query(models.StopTime).filter(models.StopTime.auto_increment_id == auto_increment_id).first().toDict()
+    return (
+        db.query(models.StopTime)
+        .filter(models.StopTime.auto_increment_id == auto_increment_id)
+        .first()
+        .toDict()
+    )
+
 
 def get_calendar_by_stop_time(db: Session, stop_time: Dict):
     trip = get_trip_by_trip_id(db, stop_time.get("trip_id"))

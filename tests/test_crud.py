@@ -20,6 +20,12 @@ def test_get_stop_times_by_stop_id(get_session):
     assert len(result) == 301
 
 
+def test_get_stop_times_by_trip_id(get_session):
+    result = crud.get_stop_times_by_trip_id(db=get_session, trip_id="3_11455579")
+    LOGGER.info(result[0])
+    assert len(result) == 26
+
+
 def test_get_trip_by_trip_id(get_session):
     result = crud.get_trip_by_trip_id(db=get_session, trip_id="3_11553791")
     LOGGER.info(result)
@@ -28,6 +34,17 @@ def test_get_trip_by_trip_id(get_session):
         "service_id": "3",
         "trip_id": "3_11553791",
         "trip_headsign": "Zajezdnia Obornicka",
+    }
+
+def test_get_stop_by_stop_id(get_session):
+    result = crud.get_stop_by_stop_id(db=get_session, stop_id="1809")
+    LOGGER.info(result)
+    assert result == {
+        "stop_id": "1809",
+        "stop_code": "12509",
+        "stop_name": "Rękodzielnicza",
+        "stop_lat": "51.13704649",
+        "stop_lon": "16.95788518",
     }
 
 

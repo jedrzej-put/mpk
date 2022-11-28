@@ -21,6 +21,8 @@ class StopTimesController:
         lat: str,
         lon: str,
         age: int,
+        target_lat: str,
+        target_lon: str,
         current_time: str = None,
         count_stop: int = 5,
         count_departure_on_stop: int = 2,
@@ -28,6 +30,8 @@ class StopTimesController:
     ):
         self.lat = lat
         self.lon = lon
+        self.target_lat = target_lat
+        self.target_lon = target_lon
         self.age = age
         # self.all_trips: List[Dict] = crud.get_trips(db=next(get_db()))
         # self.all_calendars: List[Dict] = crud.get_calendars(db=next(get_db()))
@@ -138,7 +142,7 @@ class StopTimesController:
             else:
                 return False
 
-    def verify_calendar_current_time(self, stop: Dict, stop_time: Dict) -> Dict | None:
+    def verify_calendar_current_time(self, stop_time: Dict) -> Dict | None:
         current_weekday = self.correct_weekday_based_one_time(
             self.start_datetime.weekday(), stop_time.get("departure_time")
         )
@@ -153,11 +157,45 @@ class StopTimesController:
         )
         return result
 
-    def verify_direction(self, stop: Dict, stop_time: Dict) -> Dict | None:
-        current_distance = StopsController.calc_distance(
+    def get_distance_target_location_stop_time(self, stop_time) -> float:
+        stop_id = stop_time.get("stop_id")
+        stop = crud.get_stop_by_stop_id(db=next(get_db()), stop_id=stop_id)
+        distance = StopsController.calc_distance(
             lat1=stop.get("stop_lat"),
             lon1=stop.get("stop_lon"),
-            lat2=self.lat,
-            lon2=self.lon,
+            lat2=self.target_lat,
+            lon2=self.target_lon,
         )
-        return current_distance
+        return distance
+
+    def get_next_stop_time(self, stop_time) -> float:
+        trip_id = stop_time.get("trip_id")
+        stop_sequence = stop_time.get("stop_sequence")
+        stop_times_in_trip = crud.get_stop_times_by_trip_id(
+            db=next(get_db()), trip_id=trip_id
+        )
+        greater_stop_sequence = (
+            lambda ref_stop_sequence, stop_time: True
+            if int(ref_stop_sequence) < int(stop_time.get("stop_sequence"))
+            else False
+        )
+        stop_times_greater_stop_sequence = [
+            _ for _ in stop_times_in_trip if greater_stop_sequence(stop_sequence, _)
+        ]
+        next_stop_time = min(
+            stop_times_greater_stop_sequence,
+            key=lambda stop_time: int(stop_time.get("stop_sequence")),
+        )
+
+        return next_stop_time
+
+    def verify_direction(self, stop_time: Dict) -> Dict | None:
+        current_distance = self.get_distance_target_location_stop_time(
+            stop_time=stop_time
+        )
+        next_stop_time = self.get_next_stop_time(stop_time=stop_time)
+        next_stop_time_distance = self.get_distance_target_location_stop_time(
+            stop_time=next_stop_time
+        )
+        LOGGER.info(f"current_distance: {current_distance}\t next_distance: {next_stop_time_distance}")
+        return stop_time if next_stop_time_distance < current_distance else None
