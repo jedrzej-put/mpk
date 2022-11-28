@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 a.txt
+src\package\database\mpk_api.db
