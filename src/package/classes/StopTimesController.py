@@ -8,6 +8,7 @@ from math import sin, cos, sqrt, atan2, radians
 from typing import List, Dict, TypedDict
 from toolz.functoolz import compose
 from datetime import datetime, timedelta, time, date
+from toolz.functoolz import compose_left
 from .StopsController import StopsController
 import logging
 
@@ -199,3 +200,24 @@ class StopTimesController:
         )
         LOGGER.info(f"current_distance: {current_distance}\t next_distance: {next_stop_time_distance}")
         return stop_time if next_stop_time_distance < current_distance else None
+
+    def verify_stop_time_with_compose(self, stop_time) -> Dict | None:
+        return compose_left(self.verify_calendar_current_time, self.verify_direction)(stop_time)
+    
+    def valid_stop_time_generator_to_up(self, stop_id) -> Dict:
+        stop_times = self.get_ordered_departures_of_stop(stop_id=stop_id)
+        count=0
+        for stop_time in stop_times:
+            result = self.verify_stop_time_with_compose(stop_time)
+            if result != None:
+                count += 1
+                yield result
+            if count >= self.count_departure_on_stop:
+                break
+
+    def get_departures_from_stop(self, stop):
+        stop_id = stop.get("stop_id")
+        return [_ for _ in self.valid_stop_time_generator_to_up(stop_id)]
+    
+    def get_departures_from_stop_to_process(self):
+        return {stop: self.get_departures_from_stop(stop) for stop in self.stops_to_process}

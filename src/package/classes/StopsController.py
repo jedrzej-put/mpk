@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from decimal import *
 from math import sin, cos, sqrt, atan2, radians
 from typing import List, Dict
-from toolz.functoolz import compose
+from toolz.functoolz import compose, compose_left
 
 
 class StopsController:
@@ -67,7 +67,7 @@ class StopsController:
         return stops_within_radio[:count]
 
     def test_compose(self, x):
-        def add_2(x):
+        def add_2(x):\
             return x + 2
         def multiply_2(x):
             return x * 2
