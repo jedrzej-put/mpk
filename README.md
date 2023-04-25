@@ -3,7 +3,7 @@
 ## Clone repository
 
 ```
-git clone https://github.com/jedrzej-smok/mpk-api.git
+git clone https://github.com/jedrzej-smok/mpk.git
 ```
 
 ## Create virtual environment, activate it and install required packages
